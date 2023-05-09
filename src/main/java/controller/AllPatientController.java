@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class AllPatientController {
     @FXML
-    private TableView<Patient> tableView;
+    private TableView<Patient> tableView; // foo bar
     @FXML
     private TableColumn<Patient, Integer> colID;
     @FXML
