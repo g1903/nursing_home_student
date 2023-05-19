@@ -59,6 +59,7 @@ public class Treatment {
         this.date = date;
     }
 
+
     public void setBegin(String begin) {
         LocalTime time = DateConverter.convertStringToLocalTime(begin);
         this.begin = time;
