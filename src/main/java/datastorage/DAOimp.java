@@ -1,5 +1,8 @@
 package datastorage;
 
+import model.Patient;
+import model.Treatment;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +17,10 @@ public abstract class DAOimp<T> implements DAO<T>{
         this.conn = conn;
     }
 
+    public DAOimp(Treatment treatment, Patient patient) {
+
+    }
+
     @Override
     public void create(T t) throws SQLException {
         Statement st = conn.createStatement();
@@ -26,7 +33,8 @@ public abstract class DAOimp<T> implements DAO<T>{
         Statement st = conn.createStatement();
         ResultSet result = st.executeQuery(getReadByIDStatementString(key));
         if (result.next()) {
-            object = getInstanceFromResultSet(result);
+            boolean Treatment = false;
+            object = getInstanceFromResultSet(result, Treatment);
         }
         return object;
     }
@@ -57,7 +65,7 @@ public abstract class DAOimp<T> implements DAO<T>{
 
     protected abstract String getReadByIDStatementString(long key);
 
-    protected abstract T getInstanceFromResultSet(ResultSet set) throws SQLException;
+    protected abstract T getInstanceFromResultSet(ResultSet set, boolean Treatment) throws SQLException;
 
     protected abstract String getReadAllStatementString();
 

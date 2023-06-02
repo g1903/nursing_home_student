@@ -15,10 +15,12 @@ public class PatientDAO extends DAOimp<Patient> {
 
     /**
      * constructs Onbject. Calls the Constructor from <code>DAOImp</code> to store the connection.
+     *
      * @param conn
      */
     public PatientDAO(Connection conn) {
-        super(conn);
+        super();
+        this.conn = conn;
     }
 
     /**
@@ -28,8 +30,8 @@ public class PatientDAO extends DAOimp<Patient> {
      */
     @Override
     protected String getCreateStatementString(Patient patient) {
-        return String.format("INSERT INTO patient (firstname, surname, dateOfBirth, carelevel, roomnumber, assets) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
-                patient.getFirstName(), patient.getSurname(), patient.getDateOfBirth(), patient.getCareLevel(), patient.getRoomnumber(), patient.getAssets());
+        return String.format("INSERT INTO patient (firstname, surname, dateOfBirth, carelevel, roomnumber) VALUES ('%s', '%s', '%s', '%s', '%s')",
+                patient.getFirstName(), patient.getSurname(), patient.getDateOfBirth(), patient.getCareLevel(), patient.getRoomnumber());
     }
 
     /**
@@ -44,11 +46,13 @@ public class PatientDAO extends DAOimp<Patient> {
 
     /**
      * maps a <code>ResultSet</code> to a <code>Patient</code>
-     * @param result ResultSet with a single row. Columns will be mapped to a patient-object.
+     *
+     * @param result    ResultSet with a single row. Columns will be mapped to a patient-object.
+     * @param Treatment
      * @return patient with the data from the resultSet.
      */
     @Override
-    protected Patient getInstanceFromResultSet(ResultSet result) throws SQLException {
+    protected Patient getInstanceFromResultSet(ResultSet result, boolean Treatment) throws SQLException {
         Patient p = null;
         LocalDate date = DateConverter.convertStringToLocalDate(result.getString(4));
         p = new Patient(result.getInt(1), result.getString(2),
@@ -93,8 +97,8 @@ public class PatientDAO extends DAOimp<Patient> {
     @Override
     protected String getUpdateStatementString(Patient patient) {
         return String.format("UPDATE patient SET firstname = '%s', surname = '%s', dateOfBirth = '%s', carelevel = '%s', " +
-                "roomnumber = '%s', assets = '%s' WHERE pid = %d", patient.getFirstName(), patient.getSurname(), patient.getDateOfBirth(),
-                patient.getCareLevel(), patient.getRoomnumber(), patient.getAssets(), patient.getPid());
+                "roomnumber = '%s' WHERE pid = %d", patient.getFirstName(), patient.getSurname(), patient.getDateOfBirth(),
+                patient.getCareLevel(), patient.getRoomnumber(), patient.getPid());
     }
 
     /**

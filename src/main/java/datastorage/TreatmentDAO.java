@@ -1,5 +1,6 @@
 package datastorage;
 
+import model.Patient;
 import model.Treatment;
 import utils.DateConverter;
 import java.sql.Connection;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,10 @@ public class TreatmentDAO extends DAOimp<Treatment> {
 
     public TreatmentDAO(Connection conn) {
         super(conn);
+    }
+
+    public TreatmentDAO(Treatment treatment, Patient patient) {
+        super(treatment, patient);
     }
 
     @Override
@@ -31,22 +37,33 @@ public class TreatmentDAO extends DAOimp<Treatment> {
     }
 
     @Override
-    protected Treatment getInstanceFromResultSet(ResultSet result) throws SQLException {
+    protected Treatment getInstanceFromResultSet(ResultSet result, boolean Treatment) throws SQLException {
         LocalDate date = DateConverter.convertStringToLocalDate(result.getString(3));
         LocalTime begin = DateConverter.convertStringToLocalTime(result.getString(4));
         LocalTime end = DateConverter.convertStringToLocalTime(result.getString(5));
-        Treatment m = new Treatment(result.getLong(1), result.getLong(2),
-                date, begin, end, result.getString(6), result.getString(7));
+
+        Treatment m;
+        if (ChronoUnit.DAYS.between(LocalDate.now().minusYears(10),date) >0) {
+            m = new Treatment(result.getLong(1), result.getLong(2),
+                    date, begin, end, result.getString(6), result.getString(7));
+        }else{
+            m = new Treatment(result.getLong(1), result.getLong(2),
+                    date, begin, end, result.getString(6), "nse Test");
+
+            // Behandlung aus Datnebank löschen.
+            return m;
+        }
         return m;
     }
 
+
     @Override
-    protected String getReadAllStatementString() {
+    public String getReadAllStatementString() {
         return "SELECT * FROM treatment";
     }
 
     @Override
-    protected ArrayList<Treatment> getListFromResultSet(ResultSet result) throws SQLException {
+    public ArrayList<Treatment> getListFromResultSet(ResultSet result) throws SQLException {
         ArrayList<Treatment> list = new ArrayList<Treatment>();
         Treatment t = null;
         while (result.next()) {
@@ -61,7 +78,7 @@ public class TreatmentDAO extends DAOimp<Treatment> {
     }
 
     @Override
-    protected String getUpdateStatementString(Treatment treatment) {
+    public String getUpdateStatementString(Treatment treatment) {
         return String.format("UPDATE treatment SET pid = %d, treatment_date ='%s', begin = '%s', end = '%s'," +
                 "description = '%s', remarks = '%s' WHERE tid = %d", treatment.getPid(), treatment.getDate(),
                 treatment.getBegin(), treatment.getEnd(), treatment.getDescription(), treatment.getRemarks(),
@@ -69,7 +86,7 @@ public class TreatmentDAO extends DAOimp<Treatment> {
     }
 
     @Override
-    protected String getDeleteStatementString(long key) {
+    public String getDeleteStatementString(long key) {
         return String.format("Delete FROM treatment WHERE tid= %d", key);
     }
 
@@ -89,5 +106,9 @@ public class TreatmentDAO extends DAOimp<Treatment> {
     public void deleteByPid(long key) throws SQLException {
         Statement st = conn.createStatement();
         st.executeUpdate(String.format("Delete FROM treatment WHERE pid= %d", key));
+    }
+
+    public LocalDate getSpeicherdatum() {
+        return null;
     }
 }

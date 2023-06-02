@@ -13,43 +13,52 @@ public class Patient extends Person {
     private LocalDate dateOfBirth;
     private String careLevel;
     private String roomnumber;
-    private String assets;
     private List<Treatment> allTreatments = new ArrayList<Treatment>();
 
     /**
      * constructs a patient from the given params.
+     *
+     * @param anInt
      * @param firstName
      * @param surname
      * @param dateOfBirth
      * @param careLevel
      * @param roomnumber
-     * @param assets
+     * @param string
      */
-    public Patient(String firstName, String surname, LocalDate dateOfBirth, String careLevel, String roomnumber, String assets) {
+    public Patient(int anInt, String firstName, String surname, LocalDate dateOfBirth, String careLevel, String roomnumber, String string) {
         super(firstName, surname);
         this.dateOfBirth = dateOfBirth;
         this.careLevel = careLevel;
         this.roomnumber = roomnumber;
-        this.assets = assets;
     }
 
     /**
      * constructs a patient from the given params.
+     *
      * @param pid
      * @param firstName
      * @param surname
      * @param dateOfBirth
      * @param careLevel
      * @param roomnumber
-     * @param assets
+     * @param carelevel
+     * @param room
      */
-    public Patient(long pid, String firstName, String surname, LocalDate dateOfBirth, String careLevel, String roomnumber, String assets) {
+    public Patient(long pid, String firstName, String surname, LocalDate dateOfBirth, String careLevel, String roomnumber, String carelevel, String room) {
         super(firstName, surname);
         this.pid = pid;
         this.dateOfBirth = dateOfBirth;
         this.careLevel = careLevel;
         this.roomnumber = roomnumber;
-        this.assets = assets;
+    }
+
+    public Patient(String surname, String firstname, String birthday, LocalDate dateOfBirth, String carelevel, String roomnumber) {
+        super(firstname, surname);
+        this.dateOfBirth = dateOfBirth;
+        this.careLevel = carelevel;
+        this.roomnumber = roomnumber;
+
     }
 
     /**
@@ -109,21 +118,6 @@ public class Patient extends Person {
         this.roomnumber = roomnumber;
     }
 
-    /**
-     *
-     * @return assets as string
-     */
-    public String getAssets() {
-        return assets;
-    }
-
-    /**
-     *
-     * @param assets
-     */
-    public void setAssets(String assets) {
-        this.assets = assets;
-    }
 
     /**
      * adds a treatment to the treatment-list, if it does not already contain it.
@@ -149,7 +143,6 @@ public class Patient extends Person {
                 "\nBirthday: " + this.dateOfBirth +
                 "\nCarelevel: " + this.careLevel +
                 "\nRoomnumber: " + this.roomnumber +
-                "\nAssets: " + this.assets +
                 "\n";
     }
 }

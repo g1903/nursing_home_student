@@ -16,6 +16,7 @@ public class DAOFactory {
     }
 
     public TreatmentDAO createTreatmentDAO() {
+        float datumAbfrage = 0;
         return new TreatmentDAO(ConnectionBuilder.getConnection());
     }
 
